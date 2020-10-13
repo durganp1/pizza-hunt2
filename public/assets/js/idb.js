@@ -17,7 +17,7 @@ request.onupgradeneeded = function(event) {
 // UPON A SUCCESSFUL
 request.onsuccess = function(event) {
     // WHEN DB IS SUCCESSFULLY CREATED WITH ITS OBJECT STORE (FROM ONUPGRADEDNEDDED EVENT ABOVE) OR SIMPLY ESTABLISHED A CONNECTION, SAVE REFERENCE TO DB IN GLOBAL VARIABLE
-    db = event.target.results;
+    db = event.target.result;
 
     // CHECK IF APP IS ONLINE, IF YES RUN uploadPizza() FUNCTION TO SEND ALL LOCAL DB DATA TO API
     if (navigator.online) {
@@ -54,10 +54,10 @@ function uploadPizza() {
     // UPON A SUCCESSFUL .getAll() EXECUTION, RUN THIS FUNCTION
     getAll.onsuccess = function() {
         // IF THERE WAS DATA IN INDEXED DB'S STORE, LET'S SEND IT TO THE API SERVER
-        if (getAll.results.length > 0) {
+        if (getAll.result.length > 0) {
             fetch('/api/pizzas', {
                 method: 'POST',
-                body: JSON.stringify(getAll.results),
+                body: JSON.stringify(getAll.result),
                 headers: {
                     Accept: 'application/json, text/plain, */*' ,
                     'Content-Type' : 'application/json'
@@ -83,3 +83,6 @@ function uploadPizza() {
         }
     };
 }
+
+// LISTEN FOR APP COMING BACK ONLINE
+window.addEventListener('online', uploadPizza);
